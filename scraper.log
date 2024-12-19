@@ -1,0 +1,22 @@
+import logging
+
+
+logging.basicConfig(filename='scraper.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def scrape_headlines(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        headlines = soup.find_all('h3', class_='gs-c-promo-heading__title')
+        logging.info("Successfully scraped the website!")
+        for idx, headline in enumerate(headlines, start=1):
+            print(f"{idx}. {headline.get_text(strip=True)}")
+            logging.info(f"{idx}. {headline.get_text(strip=True)}")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
+
+news_url = "https://www.bbc.com/news"
+scrape_headlines(news_url)
+
